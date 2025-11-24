@@ -10,7 +10,7 @@ const cabinSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    reqularPrice: {
+    regularPrice: {
         type: Number,
         required: true,
         min: 0,
@@ -20,9 +20,8 @@ const cabinSchema = new mongoose.Schema({
         required: true,
     },
     description: { type: String, },
-    images: {
-        type: [String],
-        default: [],
+    image: {
+        type: String,
     },
 
 },

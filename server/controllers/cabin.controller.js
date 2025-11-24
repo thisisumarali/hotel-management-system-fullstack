@@ -2,16 +2,20 @@ import Cabin from "../models/cabins.model.js";
 
 export const createCabin = async (req, res) => {
     try {
-        const { name, maxCapacity, reqularPrice, discount, description, images } =
+        const { name, maxCapacity, regularPrice, discount, description, image } =
             req.body;
+
+        const imagePath = req.file
+            ? `http://${process.env.SERVER_URL}/uploads/${req.file.filename}`
+            : null;
 
         const cabin = await Cabin.create({
             name,
             maxCapacity,
-            reqularPrice,
+            regularPrice,
             discount,
             description,
-            images
+            image: imagePath
         });
 
         res.status(201).json({
@@ -26,7 +30,7 @@ export const createCabin = async (req, res) => {
 // Get all cabins
 export const getAllCabins = async (req, res) => {
     try {
-        const cabins = await Cabin.find().sort({ createdAt: -1 });
+        const cabins = await Cabin.find()
 
         res.json({ cabins });
     } catch (err) {
