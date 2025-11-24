@@ -1,6 +1,6 @@
 export const getCabins = async () => {
 
-    const res = await fetch("http://192.168.100.31:5000/api/cabins", {
+    const res = await fetch("http://localhost:5000/api/cabins", {
         method: "GET",
         headers: {
             "Content-type": "application/json",
@@ -14,23 +14,26 @@ export const getCabins = async () => {
 };
 
 export const createCabins = async (data) => {
-    const res = await fetch("http://192.168.100.31:5000/api/cabins", {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json",
-        },
-        body: JSON.stringify(data),
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
     });
-    if (!res.ok) {
-        throw new Error("Failed to Post cabins");
-    }
-    const result = await res.json();
-    return result;
-}
+
+    const res = await fetch("http://localhost:5000/api/cabins", {
+        method: "POST",
+        body: formData,
+    });
+
+    if (!res.ok) throw new Error("Failed to post cabin");
+
+    return await res.json();
+};
+
 
 export const deleteCabins = async (id) => {
 
-    const res = await fetch(`http://192.168.100.31:5000/api/cabins/${id}`, {
+    const res = await fetch(`http://localhost:5000/api/cabins/${id}`, {
         method: "DELETE",
         headers: {
             "Content-type": "application/json",

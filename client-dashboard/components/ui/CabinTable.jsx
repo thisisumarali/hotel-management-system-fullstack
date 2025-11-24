@@ -6,6 +6,9 @@ import { Table, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import Image from "next/image";
 import { Button } from "./button";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import CreateCabinForm from "./CreateCabinForm";
+import { useState } from "react";
 
 const CabinTable = () => {
   const queryClient = useQueryClient();
@@ -19,6 +22,8 @@ const CabinTable = () => {
     queryKey: ["cabins"],
     queryFn: getCabins,
   });
+  const [showForm, setShowForm] = useState(false);
+  const [selectedCabin, setSelectedCabin] = useState(null);
 
   const cabins = dataCabins?.cabins || [];
 
@@ -42,7 +47,7 @@ const CabinTable = () => {
   if (error) return <div>Error loading cabins</div>;
 
   return (
-    <div>
+    <>
       <Table className="bg-white">
         <TableHeader>
           <TableRow>
@@ -59,12 +64,14 @@ const CabinTable = () => {
             <TableRow key={cabin._id}>
               <TableCell>
                 {cabin.image && (
-                  <Image
-                    src={cabin.image}
-                    alt={cabin.name}
-                    width={50}
-                    height={50}
-                  />
+                  <Link href={cabin.image} target="_blank">
+                    <Image
+                      src={cabin.image}
+                      alt={cabin.name}
+                      width={80}
+                      height={80}
+                    />
+                  </Link>
                 )}
               </TableCell>
               <TableCell>{cabin.name}</TableCell>
@@ -78,15 +85,26 @@ const CabinTable = () => {
                   variant="destructive"
                   onClick={() => deleteMutation.mutate(cabin._id)}
                   disabled={deleteMutation.isLoading}
+                  className="mr-2"
                 >
                   {deleteMutation.isLoading ? "Deleting..." : "Delete"}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedCabin(cabin);
+                    setShowForm(true);
+                  }}
+                >
+                  Edit
                 </Button>
               </TableCell>
             </TableRow>
           ))}
         </tbody>
       </Table>
-    </div>
+      {showForm && <CreateCabinForm cabinToEdit={selectedCabin} />}
+    </>
   );
 };
 

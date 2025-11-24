@@ -1,26 +1,35 @@
 import Cabin from "../models/cabins.model.js";
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+    cloud_name: 'dtfoawz1p',
+    api_key: '491458318682163',
+    api_secret: 'ZrzBtA8urlpXNg058YeqNBU-IPc'
+});
 
 export const createCabin = async (req, res) => {
     try {
         const { name, maxCapacity, regularPrice, discount, description, image } =
             req.body;
 
-        const imagePath = req.file
-            ? `http://${process.env.SERVER_URL}/uploads/${req.file.filename}`
-            : null;
+        const file = req.files.image;
 
-        const cabin = await Cabin.create({
-            name,
-            maxCapacity,
-            regularPrice,
-            discount,
-            description,
-            image: imagePath
-        });
+        cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+            if (err) return res.status(500).json({ msg: err.message });
 
-        res.status(201).json({
-            msg: "Cabin created",
-            cabin
+            const cabin = await Cabin.create({
+                name,
+                maxCapacity,
+                regularPrice,
+                discount,
+                description,
+                image: result.url
+            });
+
+            res.status(201).json({
+                msg: "Cabin created",
+                cabin,
+            });
         });
     } catch (err) {
         res.status(500).json({ msg: err.message });

@@ -5,8 +5,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCabins } from "@/utils/api";
 import toast from "react-hot-toast";
 
-const CreateCabinForm = () => {
-  const { register, handleSubmit, reset, getValues, formState } = useForm();
+const CreateCabinForm = ({ cabinToEdit = {} }) => {
+  const { _id: editId, ...editValues } = cabinToEdit || {};
+  const isEditSession = Boolean(editId);
+  const { register, handleSubmit, reset, getValues, formState } = useForm({
+    defaultValues: isEditSession ? editValues : {},
+  });
+
   const { errors } = formState;
 
   const queryClient = useQueryClient();
@@ -22,32 +27,43 @@ const CreateCabinForm = () => {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    const file = data.image[0];
+
+    const formData = {
+      ...data,
+      image: file,
+    };
+
+    mutate(formData);
   }
 
   function onError(errors) {
     console.log(errors);
   }
+
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md ">
+    <div className="w-full mx-auto bg-white p-8 rounded-xl shadow-md ">
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit, onError)}>
         {/* Cabin Name */}
-        <div className="grid grid-cols-3 items-center gap-4">
+        <div className="grid grid-cols-3 items-start gap-4">
           <label className="text-sm font-medium text-gray-700" htmlFor="name">
             Cabin name
           </label>
           <input
             type="text"
             id="name"
-            className="col-span-2 rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
+            className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
             {...register("name", {
               required: "This field is required",
             })}
           />
-          {errors?.name?.message }
+          {errors?.name?.message && (
+            <p className="text-red-700">{errors?.name?.message}</p>
+          )}
         </div>
 
-        <div className="grid grid-cols-3 items-center gap-4">
+        {/* Maximum Capacity */}
+        <div className="grid grid-cols-3 items-start gap-4">
           <label
             className="text-sm font-medium text-gray-700"
             htmlFor="maxCapacity"
@@ -57,7 +73,8 @@ const CreateCabinForm = () => {
           <input
             type="number"
             id="maxCapacity"
-            className="col-span-2 rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
+            min={0}
+            className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
             {...register("maxCapacity", {
               required: "This field is required",
               min: {
@@ -66,10 +83,13 @@ const CreateCabinForm = () => {
               },
             })}
           />
+          {errors?.maxCapacity?.message && (
+            <p className="text-red-700">{errors?.maxCapacity?.message}</p>
+          )}
         </div>
 
         {/* Regular Price */}
-        <div className="grid grid-cols-3 items-center gap-4">
+        <div className="grid grid-cols-3 items-start gap-4">
           <label
             className="text-sm font-medium text-gray-700"
             htmlFor="regularPrice"
@@ -79,9 +99,8 @@ const CreateCabinForm = () => {
           <input
             type="number"
             id="regularPrice"
-            defaultValue={0}
             min={0}
-            className="col-span-2 rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
+            className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
             {...register("regularPrice", {
               required: "This field is required",
               min: {
@@ -90,10 +109,13 @@ const CreateCabinForm = () => {
               },
             })}
           />
+          {errors?.regularPrice?.message && (
+            <p className="text-red-700">{errors?.regularPrice?.message}</p>
+          )}
         </div>
 
         {/* Discount */}
-        <div className="grid grid-cols-3 items-center gap-4">
+        <div className="grid grid-cols-3 items-start gap-4">
           <label
             className="text-sm font-medium text-gray-700"
             htmlFor="discount"
@@ -103,8 +125,8 @@ const CreateCabinForm = () => {
           <input
             type="number"
             id="discount"
-            defaultValue={0}
-            className="col-span-2 rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
+            min={0}
+            className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
             {...register("discount", {
               required: "This field is required",
               validate: (value) =>
@@ -112,10 +134,13 @@ const CreateCabinForm = () => {
                 "Discount should be less than regular price.",
             })}
           />
+          {errors?.discount?.message && (
+            <p className="text-red-700">{errors?.discount?.message}</p>
+          )}
         </div>
 
         {/* Description */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 items-start gap-4">
           <label
             className="text-sm font-medium text-gray-700"
             htmlFor="description"
@@ -125,28 +150,45 @@ const CreateCabinForm = () => {
           <textarea
             id="description"
             rows={3}
-            className="col-span-2 rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
-            {...register("description")}
+            className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
+            {...register("description", {
+              required: "Description is required",
+            })}
           ></textarea>
+          {errors?.description?.message && (
+            <p className="text-red-700">{errors?.description?.message}</p>
+          )}
         </div>
 
         {/* Photo Upload */}
-        <div className="grid grid-cols-3 items-center gap-4">
+        <div className="grid grid-cols-3 items-start gap-4">
           <label className="text-sm font-medium text-gray-700" htmlFor="image">
             Cabin photo
           </label>
           <input
-            type="text"
             id="image"
-            className="col-span-2 rounded-md border border-gray-300 p-2 bg-white focus:ring-2 focus:ring-black focus:outline-none"
-            {...register("image")}
+            accept="image/*"
+            type="file"
+            className="
+            file:bg-black file:text-white file:px-3 file:py-2 file:rounded-2xl file:cursor-pointer file:hover:bg-gray-950
+            rounded-md border border-gray-300 p-2 bg-white focus:ring-2 focus:ring-black focus:outline-none"
+            {...register("image", {
+              required: isEditSession ? false : "This field is required",
+            })}
           />
+          {errors?.image?.message && (
+            <p className="text-red-700">{errors?.image?.message}</p>
+          )}
         </div>
 
         {/* Buttons */}
         <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline">Cancel</Button>
-          <Button disabled={isCreating}>Add cabin</Button>
+          <Button variant="outline" type="button" onClick={() => reset()}>
+            Cancel
+          </Button>
+          <Button disabled={isCreating}>
+            {isEditSession ? "Edit cabin" : "Creating a new cabin"}
+          </Button>
         </div>
       </form>
     </div>
