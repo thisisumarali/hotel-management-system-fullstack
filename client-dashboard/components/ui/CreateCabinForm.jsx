@@ -1,9 +1,7 @@
 import React from "react";
 import { Button } from "./button";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCabins } from "@/utils/api";
-import toast from "react-hot-toast";
+import { useCreateCabins, useEditCabins } from "@/hooks/cabins.hooks";
 
 const CreateCabinForm = ({ cabinToEdit = {} }) => {
   const { _id: editId, ...editValues } = cabinToEdit || {};
@@ -12,30 +10,58 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
     defaultValues: isEditSession ? editValues : {},
   });
 
+  const { mutateCreate, isCreating } = useCreateCabins();
+  const { mutateEdit, isEditing } = useEditCabins();
+
   const { errors } = formState;
 
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading: isCreating } = useMutation({
-    mutationFn: createCabins,
-    onSuccess: () => {
-      toast.success("New cabin successfully added");
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
+  const isWorking = isCreating || isEditing;
+  // const submitLock = React.useRef(false);
 
   function onSubmit(data) {
-    const file = data.image[0];
-
-    const formData = {
-      ...data,
-      image: file,
-    };
-
-    mutate(formData);
+    if (isEditSession) {
+      const file = data.image?.[0];
+      const formData = { ...data, image: file || null };
+      mutateEdit({ id: editId, data: formData }, { onSuccess: () => reset() });
+    } else {
+      const file = data.image[0];
+      const formData = { ...data, image: file };
+      mutateCreate(formData, { onSuccess: () => reset() });
+    }
   }
+  // Multi cabins solution
+  // function onSubmit(data) {
+  //   if (submitLock.current) return;
+  //   submitLock.current = true;
+  //   if (isEditSession) {
+  //     const file = data.image?.[0];
+  //     const formData = {
+  //       ...data,
+  //       image: file || null,
+  //     };
+  //     mutateEdit(
+  //       { id: editId, data: formData },
+  //       {
+  //         onSettled: () => {
+  //           submitLock.current = false;
+  //         },
+  //       }
+  //     );
+  //   } else {
+  //     const file = data.image[0];
+
+  //     const formData = {
+  //       ...data,
+  //       image: file,
+  //     };
+
+  //     mutateCreate(formData, {
+  //       onSettled: () => {
+  //         submitLock.current = false; // release lock
+  //       },
+  //     });
+  //   }
+  // }
 
   function onError(errors) {
     console.log(errors);
@@ -56,6 +82,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
             {...register("name", {
               required: "This field is required",
             })}
+            disabled={isWorking}
           />
           {errors?.name?.message && (
             <p className="text-red-700">{errors?.name?.message}</p>
@@ -82,6 +109,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
                 message: "Capacity should be atleast 1",
               },
             })}
+            disabled={isWorking}
           />
           {errors?.maxCapacity?.message && (
             <p className="text-red-700">{errors?.maxCapacity?.message}</p>
@@ -108,6 +136,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
                 message: "Regular price should be atleast 1",
               },
             })}
+            disabled={isWorking}
           />
           {errors?.regularPrice?.message && (
             <p className="text-red-700">{errors?.regularPrice?.message}</p>
@@ -128,11 +157,11 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
             min={0}
             className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
             {...register("discount", {
-              required: "This field is required",
               validate: (value) =>
-                value <= getValues().regularPrice ||
+                Number(value) <= Number(getValues().regularPrice) ||
                 "Discount should be less than regular price.",
             })}
+            disabled={isWorking}
           />
           {errors?.discount?.message && (
             <p className="text-red-700">{errors?.discount?.message}</p>
@@ -175,6 +204,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
             {...register("image", {
               required: isEditSession ? false : "This field is required",
             })}
+            disabled={isWorking}
           />
           {errors?.image?.message && (
             <p className="text-red-700">{errors?.image?.message}</p>
@@ -186,7 +216,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
           <Button variant="outline" type="button" onClick={() => reset()}>
             Cancel
           </Button>
-          <Button disabled={isCreating}>
+          <Button disabled={isWorking}>
             {isEditSession ? "Edit cabin" : "Creating a new cabin"}
           </Button>
         </div>

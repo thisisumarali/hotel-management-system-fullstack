@@ -1,50 +1,31 @@
 "use client";
-import { getCabins, deleteCabins } from "@/utils/api";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ImSpinner9 } from "react-icons/im";
 import { Table, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import Image from "next/image";
 import { Button } from "./button";
-import toast from "react-hot-toast";
 import Link from "next/link";
 import CreateCabinForm from "./CreateCabinForm";
 import { useState } from "react";
+import { useDeleteCabins, useGettingsCabins } from "@/hooks/cabins.hooks";
+import { HiPencil, HiTrash } from "react-icons/hi";
+import { HiSquare2Stack } from "react-icons/hi2";
 
 const CabinTable = () => {
-  const queryClient = useQueryClient();
-
-  // Fetch cabins
-  const {
-    data: dataCabins,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["cabins"],
-    queryFn: getCabins,
-  });
   const [showForm, setShowForm] = useState(false);
   const [selectedCabin, setSelectedCabin] = useState(null);
+  const { isDeleting, deleteCabin } = useDeleteCabins();
+  const { isGetting, isError, dataCabins } = useGettingsCabins();
 
   const cabins = dataCabins?.cabins || [];
 
-  // Mutation for deleting a cabin
-  const deleteMutation = useMutation({
-    mutationFn: deleteCabins,
-    onSuccess: () => {
-      // Refetch cabins after successful deletion
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      toast.success("Delete Successfully");
-    },
-  });
-
-  if (isLoading)
+  if (isGetting)
     return (
       <div className="flex justify-center items-center h-64">
         <ImSpinner9 className="text-4xl animate-spin" />
       </div>
     );
 
-  if (error) return <div>Error loading cabins</div>;
+  if (isError) return <div>Error loading cabins</div>;
 
   return (
     <>
@@ -77,27 +58,35 @@ const CabinTable = () => {
               <TableCell>{cabin.name}</TableCell>
               <TableCell>Fit's upto {cabin.maxCapacity} guests</TableCell>
               <TableCell>{cabin.regularPrice}$</TableCell>
+
               <TableCell className="text-green-600 font-bold">
-                {cabin.discount}$
+                {cabin.discount ? (
+                  cabin.discount + "$"
+                ) : (
+                  <span className="text-black">&mdash;</span>
+                )}
               </TableCell>
               <TableCell>
-                <Button
+                <button className="">
+                  <HiSquare2Stack />
+                </button>
+                <button
                   variant="destructive"
-                  onClick={() => deleteMutation.mutate(cabin._id)}
-                  disabled={deleteMutation.isLoading}
-                  className="mr-2"
+                  onClick={() => deleteCabin(cabin._id)}
+                  disabled={isDeleting}
+                  className="text-red-800"
                 >
-                  {deleteMutation.isLoading ? "Deleting..." : "Delete"}
-                </Button>
-                <Button
-                  variant="outline"
+                  <HiTrash />
+                </button>
+                <button
+                  className=""
                   onClick={() => {
                     setSelectedCabin(cabin);
                     setShowForm(true);
                   }}
                 >
-                  Edit
-                </Button>
+                  <HiPencil />
+                </button>
               </TableCell>
             </TableRow>
           ))}

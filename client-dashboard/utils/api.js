@@ -29,6 +29,22 @@ export const createCabins = async (data) => {
 
     return await res.json();
 };
+export const editCabin = async (id, data) => {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+    });
+
+    const res = await fetch(`http://localhost:5000/api/cabins/${id}`, {
+        method: "PUT",
+        body: formData,
+    });
+
+    if (!res.ok) throw new Error("Failed to edit cabin");
+
+    return await res.json();
+};
 
 
 export const deleteCabins = async (id) => {

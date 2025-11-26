@@ -9,7 +9,7 @@ cloudinary.config({
 
 export const createCabin = async (req, res) => {
     try {
-        const { name, maxCapacity, regularPrice, discount, description, image } =
+        const { name, maxCapacity, regularPrice, discount, description } =
             req.body;
 
         const file = req.files.image;
@@ -36,6 +36,48 @@ export const createCabin = async (req, res) => {
     }
 };
 
+
+// Update cabin
+export const updateCabin = async (req, res) => {
+    try {
+        const cabin = await Cabin.findById(req.params.id);
+
+        if (!cabin)
+            return res.status(404).json({ msg: "Cabin not found" });
+
+        let imageUrl = cabin.image;
+
+        if (req.files && req.files.image) {
+            const file = req.files.image;
+
+            const oldPublicId = cabin.image.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(oldPublicId);
+
+            const uploadResult = await cloudinary.uploader.upload(file.tempFilePath);
+            imageUrl = uploadResult.url;
+        }
+
+        const updatedCabin = await Cabin.findByIdAndUpdate(
+            req.params.id,
+            {
+                ...req.body,
+                image: imageUrl
+            },
+            { new: true }
+        );
+
+        res.json({
+            msg: "Cabin updated",
+            cabin: updatedCabin
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: err.message });
+    }
+};
+
+
 // Get all cabins
 export const getAllCabins = async (req, res) => {
     try {
@@ -55,27 +97,6 @@ export const getCabinById = async (req, res) => {
         if (!cabin) return res.status(404).json({ msg: "Cabin not found" });
 
         res.json({ cabin });
-    } catch (err) {
-        res.status(500).json({ msg: err.message });
-    }
-};
-
-// Update cabin
-export const updateCabin = async (req, res) => {
-    try {
-        const updatedCabin = await Cabin.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
-
-        if (!updatedCabin)
-            return res.status(404).json({ msg: "Cabin not found" });
-
-        res.json({
-            msg: "Cabin updated",
-            cabin: updatedCabin
-        });
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
