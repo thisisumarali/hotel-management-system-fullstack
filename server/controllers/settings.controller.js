@@ -12,7 +12,7 @@ export const getSettings = async (req, res) => {
 
 export const updateSettings = async (req, res) => {
     try {
-        const { minBookingLength, maxBookingLength, maxGuestPerNight } = req.body;
+        const { minBookingLength, maxBookingLength, maxGuestPerBooking } = req.body;
 
         let settings = await Settings.findOne();
 
@@ -20,12 +20,12 @@ export const updateSettings = async (req, res) => {
             settings = await Settings.create({
                 minBookingLength,
                 maxBookingLength,
-                maxGuestPerNight
+                maxGuestPerBooking
             });
         } else {
             settings.minBookingLength = minBookingLength;
             settings.maxBookingLength = maxBookingLength;
-            settings.maxGuestPerNight = maxGuestPerNight;
+            settings.maxGuestPerBooking = maxGuestPerBooking;
             await settings.save();
         }
 
