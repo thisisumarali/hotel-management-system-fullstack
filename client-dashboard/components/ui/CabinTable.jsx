@@ -80,7 +80,7 @@ const CabinTable = () => {
               </TableCell>
               <TableCell>
                 <button
-                  className=""
+                  className="text-lg"
                   disabled={isCreating}
                   onClick={() => handleDuplicate(cabin)}
                 >
@@ -90,12 +90,12 @@ const CabinTable = () => {
                   variant="destructive"
                   onClick={() => deleteCabin(cabin._id)}
                   disabled={isDeleting}
-                  className="text-red-800"
+                  className="text-red-800 text-lg"
                 >
                   <HiTrash />
                 </button>
                 <button
-                  className=""
+                  className="text-lg"
                   onClick={() => {
                     setSelectedCabin(cabin);
                     setShowForm(true);
