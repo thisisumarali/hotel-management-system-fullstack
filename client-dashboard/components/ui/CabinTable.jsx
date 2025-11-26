@@ -2,11 +2,14 @@
 import { ImSpinner9 } from "react-icons/im";
 import { Table, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import Image from "next/image";
-import { Button } from "./button";
 import Link from "next/link";
 import CreateCabinForm from "./CreateCabinForm";
 import { useState } from "react";
-import { useDeleteCabins, useGettingsCabins } from "@/hooks/cabins.hooks";
+import {
+  useCreateCabins,
+  useDeleteCabins,
+  useGettingsCabins,
+} from "@/hooks/cabins.hooks";
 import { HiPencil, HiTrash } from "react-icons/hi";
 import { HiSquare2Stack } from "react-icons/hi2";
 
@@ -15,9 +18,18 @@ const CabinTable = () => {
   const [selectedCabin, setSelectedCabin] = useState(null);
   const { isDeleting, deleteCabin } = useDeleteCabins();
   const { isGetting, isError, dataCabins } = useGettingsCabins();
-
+  const { mutateCreate, isCreating } = useCreateCabins();
   const cabins = dataCabins?.cabins || [];
-
+  function handleDuplicate(cabin) {
+    mutateCreate({
+      name: `Copy of ${cabin.name}`,
+      maxCapacity: cabin.maxCapacity,
+      regularPrice: cabin.regularPrice,
+      discount: cabin.discount,
+      image: cabin.image,
+      description: cabin.description,
+    });
+  }
   if (isGetting)
     return (
       <div className="flex justify-center items-center h-64">
@@ -67,7 +79,11 @@ const CabinTable = () => {
                 )}
               </TableCell>
               <TableCell>
-                <button className="">
+                <button
+                  className=""
+                  disabled={isCreating}
+                  onClick={() => handleDuplicate(cabin)}
+                >
                   <HiSquare2Stack />
                 </button>
                 <button
