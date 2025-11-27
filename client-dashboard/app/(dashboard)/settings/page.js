@@ -18,8 +18,12 @@ const page = () => {
   function handleUpdate(e, field) {
     const { value } = e.target;
     if (!value) return;
-    updateSetting({ [field]: Number(value) });
+    updateSetting({
+      ...setting,
+      [field]: Number(value),
+    });
   }
+
   return (
     <div className="p-10">
       <h1 className="md:text-3xl text-2xl font-bold pb-4">
