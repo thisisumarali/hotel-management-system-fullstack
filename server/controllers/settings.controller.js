@@ -20,16 +20,11 @@ export const updateSettings = async (req, res) => {
             settings = await Settings.create({
                 minBookingLength,
                 maxBookingLength,
-<<<<<<< HEAD
                 maxGuestPerBooking,
-
             })
             res.json({
                 msg: "Settings created",
                 settings
-=======
-                maxGuestPerBooking
->>>>>>> 58da312912dea4c7fb95cad96575cbe40c554e2c
             });
         } else {
             settings.minBookingLength = minBookingLength;
