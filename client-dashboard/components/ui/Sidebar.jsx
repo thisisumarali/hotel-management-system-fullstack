@@ -16,7 +16,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-64 fixed bg-white shadow text-black p-7 flex flex-col gap-8">
+    <div className="h-screen w-64 xl:w-72 2xl:w-80 fixed bg-white shadow text-black p-7 flex flex-col gap-8">
       <div>
         <h2 className="text-2xl font-semibold">Dashboard</h2>
       </div>

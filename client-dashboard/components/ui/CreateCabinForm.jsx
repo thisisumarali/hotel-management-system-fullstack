@@ -3,7 +3,7 @@ import { Button } from "./button";
 import { useForm } from "react-hook-form";
 import { useCreateCabins, useEditCabins } from "@/hooks/cabins.hooks";
 
-const CreateCabinForm = ({ cabinToEdit = {} }) => {
+const CreateCabinForm = ({ cabinToEdit = {}, onCloseModal, closeEditform }) => {
   const { _id: editId, ...editValues } = cabinToEdit || {};
   const isEditSession = Boolean(editId);
   const { register, handleSubmit, reset, getValues, formState } = useForm({
@@ -22,11 +22,23 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
     if (isEditSession) {
       const file = data.image?.[0];
       const formData = { ...data, image: file || null };
-      mutateEdit({ id: editId, data: formData }, { onSuccess: () => reset() });
+      mutateEdit(
+        { id: editId, data: formData },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
     } else {
       const file = data.image[0];
       const formData = { ...data, image: file };
-      mutateCreate(formData, { onSuccess: () => reset() });
+      mutateCreate(formData, {
+        onSuccess: () => {
+          reset(), onCloseModal?.();
+        },
+      });
     }
   }
   // Multi cabins solution
@@ -68,7 +80,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
   }
 
   return (
-    <div className="w-full mx-auto bg-white p-8 rounded-xl shadow-md ">
+    <div className="w-full mx-auto bg-white  rounded-xl ">
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit, onError)}>
         {/* Cabin Name */}
         <div className="grid grid-cols-3 items-start gap-4">
@@ -212,11 +224,19 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline" type="button" onClick={() => reset()}>
+        <div className="flex justify-end gap-3 pt-4 ">
+          <Button
+            variant="outline"
+            type="reset"
+            className="cursor-pointer"
+            onClick={() => {
+              onCloseModal?.();
+              closeEditform?.();
+            }}
+          >
             Cancel
           </Button>
-          <Button disabled={isWorking}>
+          <Button disabled={isWorking} className="cursor-pointer">
             {isEditSession ? "Edit cabin" : "Creating a new cabin"}
           </Button>
         </div>

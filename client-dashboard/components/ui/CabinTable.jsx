@@ -12,6 +12,7 @@ import {
 } from "@/hooks/cabins.hooks";
 import { HiPencil, HiTrash } from "react-icons/hi";
 import { HiSquare2Stack } from "react-icons/hi2";
+import Modal from "./Modal";
 
 const CabinTable = () => {
   const [showForm, setShowForm] = useState(false);
@@ -98,7 +99,7 @@ const CabinTable = () => {
                   className="text-lg"
                   onClick={() => {
                     setSelectedCabin(cabin);
-                    setShowForm(true);
+                    setShowForm((show) => !show);
                   }}
                 >
                   <HiPencil />
@@ -108,7 +109,14 @@ const CabinTable = () => {
           ))}
         </tbody>
       </Table>
-      {showForm && <CreateCabinForm cabinToEdit={selectedCabin} />}
+      {showForm && (
+        <Modal onClose={() => setShowForm(false)}>
+          <CreateCabinForm
+            cabinToEdit={selectedCabin}
+            closeEditform={() => setShowForm(false)}
+          />
+        </Modal>
+      )}
     </>
   );
 };

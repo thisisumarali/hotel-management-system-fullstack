@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
         <Sidebar />
 
         {/* Main content area */}
-        <div className="flex-1 ml-64 flex flex-col">
+        <div className="flex-1 ml-64 xl:ml-72  2xl:ml-80 flex flex-col">
           <Header />
           <main className="p-6 bg-gray-100 h-screen">{children}</main>
         </div>
