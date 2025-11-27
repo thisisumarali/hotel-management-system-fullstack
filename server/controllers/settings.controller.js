@@ -16,6 +16,7 @@ export const updateSettings = async (req, res) => {
 
     let settings = await Settings.findOne();
 
+<<<<<<< HEAD
     if (!settings) {
       settings = await Settings.create({
         minBookingLength,
@@ -27,6 +28,31 @@ export const updateSettings = async (req, res) => {
       settings.maxBookingLength = maxBookingLength;
       settings.maxGuestPerBooking = maxGuestPerBooking;
       await settings.save();
+=======
+        if (!settings) {
+            settings = await Settings.create({
+                minBookingLength,
+                maxBookingLength,
+                maxGuestPerBooking,
+            })
+            res.json({
+                msg: "Settings created",
+                settings
+            });
+        } else {
+            settings.minBookingLength = minBookingLength;
+            settings.maxBookingLength = maxBookingLength;
+            settings.maxGuestPerBooking = maxGuestPerBooking;
+            await settings.save();
+            res.json({
+                msg: "Settings updated",
+                settings
+            });
+        }
+
+    } catch (err) {
+        res.status(500).json({ msg: err.message });
+>>>>>>> 61c0c0b0dd59135b885741c19578cb4dd7fb5132
     }
 
     res.json({
