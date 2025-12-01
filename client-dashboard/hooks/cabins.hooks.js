@@ -59,4 +59,3 @@ export function useEditCabins() {
   });
   return { mutateEdit, isEditing };
 }
-

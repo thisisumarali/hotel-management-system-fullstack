@@ -27,7 +27,7 @@ const CreateCabinForm = ({ cabinToEdit = {}, onCloseModal, closeEditform }) => {
         {
           onSuccess: () => {
             reset();
-            onCloseModal?.();
+            closeEditform?.();
           },
         }
       );
@@ -36,7 +36,8 @@ const CreateCabinForm = ({ cabinToEdit = {}, onCloseModal, closeEditform }) => {
       const formData = { ...data, image: file };
       mutateCreate(formData, {
         onSuccess: () => {
-          reset(), onCloseModal?.();
+          reset();
+          onCloseModal?.();
         },
       });
     }
@@ -80,7 +81,7 @@ const CreateCabinForm = ({ cabinToEdit = {}, onCloseModal, closeEditform }) => {
   }
 
   return (
-    <div className="w-full mx-auto bg-white  rounded-xl ">
+    <div className="w-full mx-auto bg-white  rounded-xl py-[3.2rem] px-16">
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit, onError)}>
         {/* Cabin Name */}
         <div className="grid grid-cols-3 items-start gap-4">
