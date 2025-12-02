@@ -25,17 +25,35 @@ const CabinTable = () => {
   const { mutateCreate, isCreating } = useCreateCabins();
   const { isDeleting, deleteCabin } = useDeleteCabins();
 
-  const searchParams = useSearchParams(); // fixed
+  const searchParams = useSearchParams();
   const filterValue = searchParams?.get("discount") || "all";
 
   const cabins = dataCabins?.cabins || [];
 
-  // Filtering logic using your discount logic
+  // 1) Filtering
   let filteredCabins = cabins;
   if (filterValue === "no-discount")
     filteredCabins = cabins.filter((c) => c.discount === 0);
   if (filterValue === "with-discount")
     filteredCabins = cabins.filter((c) => c.discount > 0);
+  //2 Sort
+
+  const sortBy = searchParams?.get("sortBy") || "startDate-asc";
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedCabins = [...filteredCabins].sort((a, b) => {
+    const valA = a[field];
+    const valB = b[field];
+
+    if (typeof valA === "string" && typeof valB === "string") {
+      return (
+        valA.trim().toLowerCase().localeCompare(valB.trim().toLowerCase()) *
+        modifier
+      );
+    }
+
+    return (valA - valB) * modifier;
+  });
 
   const handleDuplicate = (cabin) => {
     mutateCreate({
@@ -72,7 +90,7 @@ const CabinTable = () => {
         </TableHeader>
 
         <tbody>
-          {filteredCabins.map((cabin) => (
+          {sortedCabins.map((cabin) => (
             <TableRow key={cabin._id}>
               <TableCell>
                 {cabin.image && (
