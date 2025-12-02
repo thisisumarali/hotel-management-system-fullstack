@@ -1,5 +1,4 @@
 "use state";
-import { Button } from "./button";
 import { HiXMark } from "react-icons/hi2";
 import { createPortal } from "react-dom";
 import { useRef, useEffect } from "react";
