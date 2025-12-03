@@ -10,21 +10,17 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "HMS",
+  title: "Hostify",
   description: "Hotel Management System",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} antialiased`}
-      >
+      <body className={`${poppins.variable} antialiased`}>
         <Toaster />
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
-    </html >
+    </html>
   );
 }

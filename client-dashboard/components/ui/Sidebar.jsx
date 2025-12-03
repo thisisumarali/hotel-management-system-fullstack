@@ -3,7 +3,8 @@ import React from "react";
 import { Home, Settings, User, BookOpenCheck, Warehouse } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+import Image from "next/image";
+import logo from "../../public/logo.png";
 const Sidebar = () => {
   const pathname = usePathname();
 
@@ -17,8 +18,15 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen w-64 xl:w-72 2xl:w-80 fixed bg-white shadow text-black p-7 flex flex-col gap-8">
-      <div>
-        <h2 className="text-2xl font-semibold">Dashboard</h2>
+      <div className="flex items-center gap-3">
+        <Image
+          src={logo}
+          alt="logo"
+          width={40}
+          height={40}
+          className="w-10 h-10 object-contain"
+        />
+        <h2 className="text-2xl 2xl:text-3xl font-semibold">Hostify</h2>
       </div>
 
       <nav className="flex flex-col gap-4 text-base">
