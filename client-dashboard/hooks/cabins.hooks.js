@@ -3,7 +3,6 @@ import {
   deleteCabins as deleteCabinsAPI,
   editCabin,
   getCabins,
-  getSettingsApi,
 } from "@/utils/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";

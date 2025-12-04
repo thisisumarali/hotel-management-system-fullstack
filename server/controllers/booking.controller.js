@@ -13,7 +13,7 @@ export const createBooking = async (req, res) => {
       isPaid,
       observations,
       cabinID,
-      guestID
+      guestID,
     } = req.body;
 
     const booking = await Booking.create({
@@ -27,12 +27,12 @@ export const createBooking = async (req, res) => {
       isPaid,
       observations,
       cabinID,
-      guestID
+      guestID,
     });
 
     res.status(201).json({
       msg: "Booking created",
-      booking
+      booking,
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });
@@ -43,9 +43,8 @@ export const createBooking = async (req, res) => {
 export const getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
-      .populate("cabinID")
-      .populate("guestID")
-      .sort({ createdAt: -1 });
+      .populate("cabinID", "name")
+      .populate("guestID", "fullName email");
 
     res.json({ bookings });
   } catch (err) {
@@ -71,17 +70,15 @@ export const getBookingById = async (req, res) => {
 // Update booking
 export const updateBooking = async (req, res) => {
   try {
-    const updated = await Booking.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     if (!updated) return res.status(404).json({ msg: "Booking not found" });
 
     res.json({
       msg: "Booking updated",
-      booking: updated
+      booking: updated,
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });

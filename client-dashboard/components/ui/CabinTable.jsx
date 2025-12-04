@@ -2,7 +2,14 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ImSpinner9 } from "react-icons/im";
-import { Table, TableCell, TableHead, TableHeader, TableRow } from "./table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./table";
 import Image from "next/image";
 import Link from "next/link";
 import CreateCabinForm from "./CreateCabinForm";
@@ -15,6 +22,7 @@ import {
   useDeleteCabins,
   useGettingsCabins,
 } from "@/hooks/cabins.hooks";
+import { Loader } from "./Loader";
 
 const CabinTable = () => {
   const [showForm, setShowForm] = useState(false);
@@ -66,15 +74,11 @@ const CabinTable = () => {
     });
   };
 
-  if (isGetting)
-    return (
-      <div className="flex justify-center items-center h-64">
-        <ImSpinner9 className="text-4xl animate-spin" />
-      </div>
-    );
+  if (isGetting) return <Loader />;
 
   if (isError) return <div>Error loading cabins</div>;
 
+  if (sortedCabins.length === 0) return <Empty resourceName="Cabins" />;
   return (
     <>
       <Table className="bg-white">
@@ -89,7 +93,7 @@ const CabinTable = () => {
           </TableRow>
         </TableHeader>
 
-        <tbody>
+        <TableBody>
           {sortedCabins.map((cabin) => (
             <TableRow key={cabin._id}>
               <TableCell>
@@ -109,10 +113,10 @@ const CabinTable = () => {
               </TableCell>
               <TableCell>Fit's upto {cabin.maxCapacity} guests</TableCell>
               <TableCell>{cabin.regularPrice}$</TableCell>
-              <TableCell className="text-green-600 font-bold">
+              <TableCell className="text-green-600 font-medium">
                 {cabin.discount ? `${cabin.discount}$` : <span>&mdash;</span>}
               </TableCell>
-              <TableCell className="flex gap-2">
+              <TableCell className="">
                 <button
                   className="text-lg"
                   disabled={isCreating}
@@ -139,7 +143,7 @@ const CabinTable = () => {
               </TableCell>
             </TableRow>
           ))}
-        </tbody>
+        </TableBody>
       </Table>
 
       {showForm && (
