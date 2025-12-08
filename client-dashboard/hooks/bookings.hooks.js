@@ -14,10 +14,10 @@ export function useBookings() {
     queryFn: getBookings,
   });
 
-  console.log(data, "data"); 
+  console.log(data, "data");
 
   const bookings = Array.isArray(data?.bookings) ? data.bookings : [];
-  console.log(bookings); // This should now log the actual array
+  console.log(bookings); 
 
   const sortedAndFiltered = useMemo(() => {
     const filtered =
@@ -31,14 +31,18 @@ export function useBookings() {
       const bVal = b[field];
 
       if (field.toLowerCase().includes("date")) {
-        return (new Date(aVal) - new Date(bVal)) * modifier;
+        return (new Date(aVal).getTime() - new Date(bVal).getTime()) * modifier;
+      }
+      if (!isNaN(aVal) && !isNaN(bVal)) {
+        return (Number(aVal) - Number(bVal)) * modifier;
       }
       if (typeof aVal === "string") return aVal.localeCompare(bVal) * modifier;
-      return (aVal - bVal) * modifier;
+
+      return 0;
     });
   }, [bookings, status, sortBy]);
 
-  console.log(sortedAndFiltered); // Sorted and filtered bookings
+  console.log(sortedAndFiltered);
 
   return {
     bookings: sortedAndFiltered,

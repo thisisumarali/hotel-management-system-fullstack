@@ -27,20 +27,12 @@ const BookingTableOperation = () => {
             },
 
             {
-              value: "regularPrice-asc",
-              label: "Sort By Low Price First (low first)",
+              value: "totalPrice-asc",
+              label: "Sort By Amount (low first)",
             },
             {
-              value: "regularPrice-desc",
-              label: "Sort By High Price First (low first)",
-            },
-            {
-              value: "maxCapacity-asc",
-              label: "Sort By Capacity (low first)",
-            },
-            {
-              value: "maxCapacity-desc",
-              label: "Sort By Capacity (high first)",
+              value: "totalPrice-desc",
+              label: "Sort By Amount (high first)",
             },
           ]}
         />
