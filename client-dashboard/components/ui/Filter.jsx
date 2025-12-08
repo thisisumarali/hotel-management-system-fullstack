@@ -30,6 +30,9 @@ const Filter = ({ filterField, options }) => {
           key={opt.value}
           variant={activeFilter === opt.value ? "default" : "outline"}
           onClick={() => handleClick(opt.value)}
+          className={`${
+            activeFilter === opt.value ? "cursor-not-allowed" : ""
+          }`}
         >
           {opt.label}
         </Button>

@@ -6,11 +6,13 @@ import {
   TableRow,
   TableBody,
   TableCell,
+  TableFooter,
 } from "./table";
 import { Empty } from "./Empty";
 import { useBookings } from "@/hooks/bookings.hooks";
 import { Loader } from "./Loader";
 import { format } from "date-fns";
+import Pagination from "./Pagination";
 
 export const BookingTable = () => {
   const { bookings, isLoading } = useBookings();
@@ -81,6 +83,9 @@ export const BookingTable = () => {
           </TableRow>
         ))}
       </TableBody>
+      <TableFooter>
+        <Pagination colSpan={5} count={15}/>
+      </TableFooter>
     </Table>
   );
 };

@@ -44,7 +44,7 @@ const page = () => {
               defaultValue={minBookingLength}
               disabled={isUpdating}
               onBlur={(e) => handleUpdate(e, "minBookingLength")}
-              className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none"
+              className="rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-black focus:outline-none disabled:cursor-none"
             />
           </div>
           <div className="grid grid-cols-2 items-start gap-4">

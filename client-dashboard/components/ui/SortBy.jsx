@@ -39,7 +39,11 @@ export const SortBy = ({ options }) => {
       <SelectContent>
         <SelectGroup>
           {options.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
+            <SelectItem
+              key={opt.value}
+              value={opt.value}
+              disabled={opt.value === activeSort}
+            >
               {opt.label}
             </SelectItem>
           ))}

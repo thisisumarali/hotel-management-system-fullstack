@@ -6,6 +6,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -23,6 +24,7 @@ import {
   useGettingsCabins,
 } from "@/hooks/cabins.hooks";
 import { Loader } from "./Loader";
+import Pagination from "./Pagination";
 
 const CabinTable = () => {
   const [showForm, setShowForm] = useState(false);
@@ -118,8 +120,8 @@ const CabinTable = () => {
               </TableCell>
               <TableCell className="">
                 <button
-                  className="text-lg"
                   disabled={isCreating}
+                  className="text-lg"
                   onClick={() => handleDuplicate(cabin)}
                 >
                   <HiSquare2Stack />
@@ -144,6 +146,10 @@ const CabinTable = () => {
             </TableRow>
           ))}
         </TableBody>
+{/* 
+        <TableFooter>
+          <Pagination colSpan={6} />
+        </TableFooter> */}
       </Table>
 
       {showForm && (
