@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import Pagination from "./Pagination";
 
 export const BookingTable = () => {
-  const { bookings, isLoading } = useBookings();
+  const { bookings, totalCount, isLoading } = useBookings();
 
   console.log(bookings);
 
@@ -84,7 +84,7 @@ export const BookingTable = () => {
         ))}
       </TableBody>
       <TableFooter>
-        <Pagination colSpan={5} count={15} />
+        <Pagination colSpan={5} count={totalCount} />
       </TableFooter>
     </Table>
   );
