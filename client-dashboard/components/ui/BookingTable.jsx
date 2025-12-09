@@ -84,7 +84,7 @@ export const BookingTable = () => {
         ))}
       </TableBody>
       <TableFooter>
-        <Pagination colSpan={5} count={15}/>
+        <Pagination colSpan={5} count={15} />
       </TableFooter>
     </Table>
   );

@@ -18,7 +18,7 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen w-64 xl:w-72 2xl:w-80 fixed bg-white shadow text-black p-7 flex flex-col gap-8">
-      <div className="flex items-center gap-3">
+      <Link className="flex items-center gap-3" href="/">
         <Image
           src={logo}
           alt="logo"
@@ -27,7 +27,7 @@ const Sidebar = () => {
           className="w-10 h-10 object-contain"
         />
         <h2 className="text-2xl 2xl:text-3xl font-semibold">Hostify</h2>
-      </div>
+      </Link>
 
       <nav className="flex flex-col gap-4 text-base">
         {links.map((link) => {
