@@ -16,8 +16,6 @@ import { useGuest } from "@/hooks/user.hooks";
 export const UserTable = () => {
   const { guest, isLoading } = useGuest();
 
-  console.log(guest);
-
   if (isLoading) return <Loader />;
   if (!guest || guest.length === 0) return <Empty resourceName="Guests" />;
 

@@ -13,11 +13,21 @@ import { useBookings } from "@/hooks/bookings.hooks";
 import { Loader } from "./Loader";
 import { format } from "date-fns";
 import Pagination from "./Pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { Button } from "./button";
+import { MoreVerticalIcon } from "lucide-react";
+import { HiEye } from "react-icons/hi";
+import Link from "next/link";
 
 export const BookingTable = () => {
   const { bookings, totalCount, isLoading } = useBookings();
-
-  console.log(bookings);
 
   if (isLoading) return <Loader />;
   if (!bookings || bookings.length === 0)
@@ -80,6 +90,30 @@ export const BookingTable = () => {
             </TableCell>
 
             <TableCell className="text-green-800">${bk.totalPrice}</TableCell>
+            <TableCell>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    aria-label="Open menu"
+                    size="icon-sm"
+                  >
+                    <MoreVerticalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-40" align="end">
+                  <DropdownMenuLabel>
+                    <Link
+                      href={`/bookings/${encodeURIComponent(bk._id)}`}
+                      className="flex gap-2 items-center"
+                    >
+                      <HiEye /> See details
+                    </Link>
+                  </DropdownMenuLabel>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

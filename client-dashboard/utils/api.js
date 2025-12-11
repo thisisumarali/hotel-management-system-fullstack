@@ -64,6 +64,11 @@ export const getBookings = async () => {
   if (!res.ok) throw new Error("Failed to fetch bookings");
   return res.json();
 };
+export const getBookingsById = async (id) => {
+  const res = await fetch(`http://localhost:5000/api/booking/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch bookings by ID");
+  return res.json();
+};
 
 export const createBookings = async (data) => {
   const res = await fetch("http://localhost:5000/api/booking", {

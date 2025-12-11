@@ -1,7 +1,7 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getBookings } from "@/utils/api";
+import { getBookings, getBookingsById } from "@/utils/api";
 import { useMemo } from "react";
 import { PAGE_SIZE } from "@/utils/constants";
 
@@ -62,4 +62,15 @@ export function useBookings() {
     isLoading,
     error,
   };
+}
+export function useBooking() {
+  const { id } = useParams();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["bookings", id],
+    queryFn: () => getBookingsById(id),
+    retry: false,
+  });
+
+  return { isLoading, booking: data?.booking, error };
 }
