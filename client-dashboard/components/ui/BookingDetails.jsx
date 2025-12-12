@@ -5,6 +5,7 @@ import { Loader } from "./Loader";
 import { useMoveBack } from "@/utils/constants";
 import BookingDataBox from "./BookingDataBox";
 import BackButton from "./BackButton";
+import Link from "next/link";
 
 const BookingDetails = () => {
   const { booking, isLoading } = useBooking();
@@ -13,7 +14,7 @@ const BookingDetails = () => {
   if (isLoading) return <Loader />;
   if (!booking) return <div>No booking found</div>;
 
-  const { status, cabinID, guestID, numNights, cabinPrice, _id } = booking;
+  const { status, guestID, _id, isPaid } = booking;
 
   const statusToClasses = {
     unconfirmed: "bg-blue-200 text-blue-600",
@@ -44,13 +45,10 @@ const BookingDetails = () => {
       </div>
 
       <BookingDataBox booking={booking} />
-      {status === "unconfirmed" ? (
-        <BackButton href={`/checkin/${_id}`}>
-          Check In Booking{" "}
-          <span className="font-bold">{guestID.fullName.split(" ")[0]}</span>
-        </BackButton>
-      ) : (
-        <BackButton />
+      {status === "unconfirmed" && (
+        <Link href={`/checkin/${_id}`}>
+          <BackButton>Check In</BackButton>
+        </Link>
       )}
     </div>
   );

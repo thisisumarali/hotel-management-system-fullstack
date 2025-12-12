@@ -1,20 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackButton from "./BackButton";
 import BookingDataBox from "./BookingDataBox";
 import { useBooking } from "@/hooks/bookings.hooks";
 import { useMoveBack } from "@/utils/constants";
 import { Loader } from "./Loader";
+import CheckBox from "./CheckBox";
 
 const CheckinBooking = () => {
-  const [confirmPaid, setConfirmPaid] = useState();
+  const [confirmPaid, setConfirmPaid] = useState(false);
   const { booking, isLoading } = useBooking();
   const moveBack = useMoveBack();
+
+  useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
 
   if (isLoading) return <Loader />;
   if (!booking) return <div>No booking found</div>;
 
-  const { status, guestID } = booking;
+  const { status, guestID, totalPrice } = booking;
 
   const statusToClasses = {
     unconfirmed: "bg-blue-200 text-blue-600",
@@ -45,7 +48,22 @@ const CheckinBooking = () => {
       </div>
 
       <BookingDataBox booking={booking} />
-      <BackButton>Check In</BackButton>
+      <CheckBox
+        checked={confirmPaid}
+        disabled={confirmPaid}
+        onChange={() => setConfirmPaid((confirm) => !confirm)}
+        id="confirm"
+      >
+        I confirm that {guestID.fullName} has paid the total amount of Rs{" "}
+        {totalPrice?.toLocaleString()}
+      </CheckBox>
+
+      <BackButton disabled={!confirmPaid}>
+        Check In Booking{" "}
+        <span className="font-medium uppercase">
+          {guestID.fullName.split(" ")[0]}
+        </span>
+      </BackButton>
     </div>
   );
 };

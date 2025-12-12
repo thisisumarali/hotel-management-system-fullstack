@@ -16,7 +16,7 @@ const BookingDataBox = ({ booking }) => {
     observations,
     isPaid,
   } = booking;
-
+  console.log(isPaid);
   const { name: cabinName } = cabinID;
   const { fullName, email, nationalID, countryFlag } = guestID;
 
@@ -68,19 +68,24 @@ const BookingDataBox = ({ booking }) => {
           <span className="text-gray-600">{observations || "None"}</span>
         </div>
 
-        <div className="bg-yellow-200/60   rounded-md px-8 py-6 mt-6 flex justify-between items-center">
-          <div className="flex items-center gap-2 text-yellow-800">
+        <div
+          className={`${
+            isPaid
+              ? "bg-[#d4f7d8] text-green-700 "
+              : "bg-yellow-200/60 text-yellow-800"
+          } rounded-md px-8 py-6 mt-6 flex justify-between items-center`}
+        >
+          <div className="flex items-center gap-2">
             <WalletIcon size={16} />
             <span className="font-semibold">
-              Total price: ${totalPrice.toLocaleString()}
+              Total price: Rs {totalPrice?.toLocaleString() || 0}
             </span>
-
             <span className="text-sm ml-2">
-              ({cabinPrice.toLocaleString()} cabin price)
+              ({cabinPrice?.toLocaleString() || 0} cabin price)
             </span>
           </div>
 
-          <span className="text-xs font-bold text-yellow-900 uppercase">
+          <span className="text-xs font-bold uppercase">
             {isPaid ? "PAID" : "WILL PAY AT PROPERTY"}
           </span>
         </div>
