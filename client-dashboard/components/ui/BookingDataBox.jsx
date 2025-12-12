@@ -31,7 +31,7 @@ const BookingDataBox = ({ booking }) => {
   }
 
   return (
-    <div className="border rounded-sm overflow-hidden shadow-sm">
+    <div className="border rounded-sm overflow-hidden shadow-sm my-6">
       <div className="bg-indigo-500 text-white flex justify-between items-center px-6 py-6">
         <span className="flex items-center gap-2 text-base font-semibold">
           <HomeIcon size={18} />

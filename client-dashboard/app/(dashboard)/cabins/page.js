@@ -1,6 +1,7 @@
 "use client";
 
 import AddCabin from "@/components/ui/AddCabin";
+import BackButton from "@/components/ui/BackButton";
 import CabinTable from "@/components/ui/CabinTable";
 import CabinTableOperation from "@/components/ui/CabinTableOperation";
 
@@ -16,6 +17,7 @@ const page = () => {
           <CabinTable />
         </div>
         <AddCabin />
+        <BackButton />
       </div>
     </div>
   );

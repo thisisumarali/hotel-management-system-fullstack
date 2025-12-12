@@ -1,3 +1,4 @@
+import BackButton from "@/components/ui/BackButton";
 import { BookingTable } from "@/components/ui/BookingTable";
 import BookingTableOperation from "@/components/ui/BookingTableOperation";
 import React from "react";
@@ -14,6 +15,7 @@ const page = () => {
       <div className="py-4">
         <BookingTable />
       </div>
+      <BackButton />
     </div>
   );
 };

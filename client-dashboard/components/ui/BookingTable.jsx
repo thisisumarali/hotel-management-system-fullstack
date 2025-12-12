@@ -25,6 +25,7 @@ import { Button } from "./button";
 import { MoreVerticalIcon } from "lucide-react";
 import { HiEye } from "react-icons/hi";
 import Link from "next/link";
+import { HiArrowDownOnSquare } from "react-icons/hi2";
 
 export const BookingTable = () => {
   const { bookings, totalCount, isLoading } = useBookings();
@@ -111,6 +112,16 @@ export const BookingTable = () => {
                       <HiEye /> See details
                     </Link>
                   </DropdownMenuLabel>
+                  {bk.status === "unconfirmed" && (
+                    <DropdownMenuLabel>
+                      <Link
+                        href={`/checkin/${encodeURIComponent(bk._id)}`}
+                        className="flex gap-2 items-center"
+                      >
+                        <HiArrowDownOnSquare /> Check In
+                      </Link>
+                    </DropdownMenuLabel>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

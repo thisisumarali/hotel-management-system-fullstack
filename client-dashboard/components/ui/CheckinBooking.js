@@ -1,19 +1,20 @@
 "use client";
-import { useBooking } from "@/hooks/bookings.hooks";
-import React from "react";
-import { Loader } from "./Loader";
-import { useMoveBack } from "@/utils/constants";
-import BookingDataBox from "./BookingDataBox";
+import { useState } from "react";
 import BackButton from "./BackButton";
+import BookingDataBox from "./BookingDataBox";
+import { useBooking } from "@/hooks/bookings.hooks";
+import { useMoveBack } from "@/utils/constants";
+import { Loader } from "./Loader";
 
-const BookingDetails = () => {
+const CheckinBooking = () => {
+  const [confirmPaid, setConfirmPaid] = useState();
   const { booking, isLoading } = useBooking();
   const moveBack = useMoveBack();
 
   if (isLoading) return <Loader />;
   if (!booking) return <div>No booking found</div>;
 
-  const { status, cabinID, guestID, numNights, cabinPrice, _id } = booking;
+  const { status, guestID } = booking;
 
   const statusToClasses = {
     unconfirmed: "bg-blue-200 text-blue-600",
@@ -44,16 +45,9 @@ const BookingDetails = () => {
       </div>
 
       <BookingDataBox booking={booking} />
-      {status === "unconfirmed" ? (
-        <BackButton href={`/checkin/${_id}`}>
-          Check In Booking{" "}
-          <span className="font-bold">{guestID.fullName.split(" ")[0]}</span>
-        </BackButton>
-      ) : (
-        <BackButton />
-      )}
+      <BackButton>Check In</BackButton>
     </div>
   );
 };
 
-export default BookingDetails;
+export default CheckinBooking;

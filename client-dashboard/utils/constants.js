@@ -1,6 +1,7 @@
+"use client";
 import { useRouter } from "next/navigation";
 
-export const PAGE_SIZE = 5;
+export const PAGE_SIZE = 10;
 export function useMoveBack() {
   const router = useRouter();
 
